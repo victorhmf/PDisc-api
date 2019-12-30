@@ -1,6 +1,4 @@
-import database from '.';
-
-const { query } = database;
+import { query } from '.';
 
 const createDiscs = async () => {
   try {

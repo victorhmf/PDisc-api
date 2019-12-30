@@ -20,8 +20,8 @@ const disconnect = () => new Promise((resolve, reject) => {
   connection.disconnect((error) => (error ? reject(error) : resolve()));
 });
 
-const query = (rawQuery) => new Promise((resolve, reject) => {
-  connection.query(rawQuery, (error, result) => (error ? reject(error) : resolve(result)));
+export const query = (rawQuery, params) => new Promise((resolve, reject) => {
+  connection.query(rawQuery, params, (error, result) => (error ? reject(error) : resolve(result)));
 });
 
-export default { query, connect, disconnect };
+export default { connect, disconnect };
