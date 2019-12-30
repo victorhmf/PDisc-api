@@ -9,6 +9,7 @@
     "lint": "eslint --ext .js ."
   },
   "dependencies": {
+    "@hapi/joi": "^16.1.8",
     "cors": "^2.8.5",
     "esm": "^3.2.25",
     "express": "^4.17.1",
