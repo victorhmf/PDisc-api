@@ -12,14 +12,16 @@ const connection = mysql.createConnection({
   database,
 });
 
-const connect = async () => {
-  await new Promise((resolve, reject) => {
-    connection.connect((error) => (error ? reject(error) : resolve()));
-  });
-};
+const connect = () => new Promise((resolve, reject) => {
+  connection.connect((error) => (error ? reject(error) : resolve()));
+});
 
-const disconnect = () => {
-  connection.end();
-};
+const disconnect = () => new Promise((resolve, reject) => {
+  connection.disconnect((error) => (error ? reject(error) : resolve()));
+});
 
-export default { connect, disconnect };
+const query = (rawQuery) => new Promise((resolve, reject) => {
+  connection.query(rawQuery, (error, result) => (error ? reject(error) : resolve(result)));
+});
+
+export default { query, connect, disconnect };

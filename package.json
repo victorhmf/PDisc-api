@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon -r esm src/app.js",
+    "db:create:tables": "node -r esm src/database/createTables.js",
     "lint": "eslint --ext .js ."
   },
   "dependencies": {

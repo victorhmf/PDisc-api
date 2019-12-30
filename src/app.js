@@ -17,12 +17,12 @@ const init = async () => {
   });
 };
 
-const gracefulExit = () => {
+const gracefulExit = async () => {
   console.log('Server is graceful exiting');
 
   try {
     console.log('Server is disconnecting from database');
-    database.disconnect();
+    await database.disconnect();
   } catch (error) {
     console.log(error);
   }
