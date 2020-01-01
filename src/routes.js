@@ -4,7 +4,9 @@ import discController from './app/controllers/DiscController';
 const router = express.Router();
 
 router.post('/discs', discController.create);
-// router.put('/users/:id', usersController.update);
-// router.delete('/users/:id', remove);
+router.get('/discs', discController.list);
+router.get('/discs/:id', discController.show);
+router.put('/discs/:id', discController.update);
+router.delete('/discs/:id', discController.remove);
 
 export default router;
