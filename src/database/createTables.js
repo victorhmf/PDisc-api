@@ -2,16 +2,18 @@ import { query } from '.';
 
 const createDiscs = async () => {
   try {
-    const rawQuery = 'CREATE TABLE IF NOT EXISTS Discs (\n'
-    + 'ID int NOT NULL AUTO_INCREMENT,\n'
-    + 'Name varchar(150) NOT NULL,\n'
-    + 'ReleaseYear year NOT NULL,\n'
-    + 'Genre varchar(150) NOT NULL,\n'
-    + 'RecordCompany varchar(200) NOT NULL,\n'
-    + 'Production varchar(200) NOT NULL,\n'
-    + 'Cover varchar(300) NOT NULL,\n'
-    + 'PRIMARY KEY (ID)\n'
-    + ');';
+    const rawQuery = `CREATE TABLE IF NOT EXISTS Discs (
+     id int NOT NULL AUTO_INCREMENT,
+     name varchar(150) NOT NULL,
+     releaseYear year NOT NULL,
+     genre varchar(150) NOT NULL,
+     recordCompany varchar(200) NOT NULL,
+     production varchar(200) NOT NULL,
+     cover varchar(300) NOT NULL,
+     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+     updated_at TIMESTAMP NOT NULL DEFAULT NOW() ON UPDATE now(),
+     PRIMARY KEY (id)
+     );`;
 
     await query(rawQuery);
     console.log('Discs table was created!');

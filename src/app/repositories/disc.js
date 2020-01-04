@@ -8,16 +8,16 @@ const create = async (params) => {
   await query(rawQuery, params);
 };
 
-const count = async () => {
-  const rawQuery = 'SELECT COUNT(*) FROM Discs';
+const count = async (searchParam, whereStatement) => {
+  const rawQuery = `SELECT COUNT(*) FROM Discs ${searchParam ? whereStatement : ''}`;
 
-  const [totalItems] = await query(rawQuery);
+  const [totalItems] = await query(rawQuery, [searchParam]);
 
   return totalItems['COUNT(*)'];
 };
 
 const list = async (pageNumber, searchParam) => {
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
   const itemsToSkip = ((pageNumber || 1) - 1) * itemsPerPage;
 
   const whereStatement = 'WHERE CONCAT(name, releaseYear, genre, recordCompany, production) LIKE "%" ? "%"';
@@ -27,7 +27,7 @@ const list = async (pageNumber, searchParam) => {
   const queryParams = searchParam ? [searchParam, ...paginateParams] : paginateParams;
 
   const discs = await query(rawQuery, queryParams);
-  const totalItems = await count();
+  const totalItems = await count(searchParam, whereStatement);
 
   return { discs, totalItems };
 };
