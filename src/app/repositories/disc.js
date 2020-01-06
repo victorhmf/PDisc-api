@@ -1,8 +1,15 @@
 import { query } from '../../database';
 import schema from '../validators/disc';
+import { sanitizeErrors } from '../helpers/errors';
 
 const create = async (params) => {
-  await schema.validateAsync(params, { abortEarly: false, presence: 'required' });
+  const { error } = schema.validate(params, { abortEarly: false, presence: 'required' });
+
+  if (error) {
+    const sanitizedErrors = sanitizeErrors(error.details);
+    const errorOject = { message: sanitizedErrors };
+    throw errorOject;
+  }
 
   const rawQuery = 'INSERT INTO Discs SET ?';
   await query(rawQuery, params);
@@ -21,7 +28,7 @@ const list = async (pageNumber, searchParam) => {
   const itemsToSkip = ((pageNumber || 1) - 1) * itemsPerPage;
 
   const whereStatement = 'WHERE CONCAT(name, releaseYear, genre, recordCompany, production) LIKE "%" ? "%"';
-  const rawQuery = `SELECT * FROM Discs ${searchParam ? whereStatement : ''} LIMIT ? , ?`;
+  const rawQuery = `SELECT * FROM Discs ${searchParam ? whereStatement : ''}  ORDER BY updated_at DESC LIMIT ? , ?`;
 
   const paginateParams = [itemsToSkip, itemsPerPage];
   const queryParams = searchParam ? [searchParam, ...paginateParams] : paginateParams;
@@ -43,7 +50,14 @@ const findById = async (id) => {
 
 const update = async (id, params) => {
   await findById(id);
-  await schema.validateAsync(params, { abortEarly: false });
+
+  const { error } = schema.validate(params, { abortEarly: false });
+
+  if (error) {
+    const sanitizedErrors = sanitizeErrors(error.details);
+    const errorOject = { message: sanitizedErrors };
+    throw errorOject;
+  }
 
   const rawQuery = 'UPDATE Discs SET ? WHERE id = ?';
   await query(rawQuery, [params, id]);
