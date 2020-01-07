@@ -1,4 +1,5 @@
 import { query } from '.';
+import logger from '../app/helpers/logger';
 
 const discs = [
   [
@@ -75,9 +76,9 @@ const insertDiscs = async () => {
       ) VALUES ?`;
 
     await query(rawQuery, [discs]);
-    console.log('Discs inserted successfully.');
+    logger.info('Discs inserted successfully.');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 

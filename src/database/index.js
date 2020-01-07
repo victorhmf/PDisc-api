@@ -1,6 +1,7 @@
 import mysql from 'mysql';
 import databaseConfig from '../config/database';
 import InternalServerError from '../app/httpErrors/InternalServerError';
+import logger from '../app/helpers/logger';
 
 const {
   host, user, password, database,
@@ -20,7 +21,7 @@ const connect = () => new Promise((resolve, reject) => {
 const handleConnectionLostError = () => {
   connection.on('error', (error) => {
     if (error.code === 'PROTOCOL_CONNECTION_LOST') {
-      console.log(error);
+      logger.error(error);
     } else {
       throw error;
     }

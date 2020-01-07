@@ -2,29 +2,30 @@
 import server from './server';
 import database from './database';
 import appConfig from './config/app';
+import logger from './app/helpers/logger';
 
 const init = async () => {
   try {
-    console.log('Server is connecting with database...');
+    logger.info('Server is connecting with database...');
     await database.connect();
     database.handleConnectionLostError();
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 
   server.listen(appConfig.port, () => {
-    console.log(`Server is up and listening on port ${appConfig.port}`);
+    logger.info(`Server is up and listening on port ${appConfig.port}`);
   });
 };
 
 const gracefulExit = async () => {
-  console.log('Server is graceful exiting');
+  logger.info('Server is graceful exiting');
 
   try {
-    console.log('Server is disconnecting from database');
+    logger.info('Server is disconnecting from database');
     await database.disconnect();
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 
   process.exit(0);

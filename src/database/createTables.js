@@ -1,4 +1,5 @@
 import { query } from '.';
+import logger from '../app/helpers/logger';
 
 const createDiscs = async () => {
   try {
@@ -16,9 +17,9 @@ const createDiscs = async () => {
      );`;
 
     await query(rawQuery);
-    console.log('Discs table was created!');
+    logger.info('Discs table was created!');
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 
