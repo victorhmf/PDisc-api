@@ -1,15 +1,9 @@
 import { query } from '../../database';
 import schema from '../validators/disc';
-import { sanitizeErrors } from '../helpers/errors';
+import NotFoundError from '../httpErrors/NotFoundError';
 
 const create = async (params) => {
-  const { error } = schema.validate(params, { abortEarly: false, presence: 'required' });
-
-  if (error) {
-    const sanitizedErrors = sanitizeErrors(error.details);
-    const errorOject = { message: sanitizedErrors };
-    throw errorOject;
-  }
+  await schema.validateAsync(params, { abortEarly: false, presence: 'required' });
 
   const rawQuery = 'INSERT INTO Discs SET ?';
   await query(rawQuery, params);
@@ -17,7 +11,6 @@ const create = async (params) => {
 
 const count = async (searchParam, whereStatement) => {
   const rawQuery = `SELECT COUNT(*) FROM Discs ${searchParam ? whereStatement : ''}`;
-
   const [totalItems] = await query(rawQuery, [searchParam]);
 
   return totalItems['COUNT(*)'];
@@ -43,7 +36,7 @@ const findById = async (id) => {
   const rawQuery = 'SELECT * FROM Discs WHERE id = ?';
   const [disc] = await query(rawQuery, id);
 
-  if (!disc) throw new Error('Invalid id.');
+  if (!disc) throw new NotFoundError('Disc not found.');
 
   return disc;
 };
@@ -51,13 +44,7 @@ const findById = async (id) => {
 const update = async (id, params) => {
   await findById(id);
 
-  const { error } = schema.validate(params, { abortEarly: false });
-
-  if (error) {
-    const sanitizedErrors = sanitizeErrors(error.details);
-    const errorOject = { message: sanitizedErrors };
-    throw errorOject;
-  }
+  await schema.validateAsync(params, { abortEarly: false });
 
   const rawQuery = 'UPDATE Discs SET ? WHERE id = ?';
   await query(rawQuery, [params, id]);
@@ -69,7 +56,6 @@ const remove = async (id) => {
   const rawQuery = 'DELETE FROM Discs WHERE id = ?';
   await query(rawQuery, id);
 };
-
 
 export default {
   create, update, remove, list, findById,

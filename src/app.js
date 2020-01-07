@@ -7,9 +7,9 @@ const init = async () => {
   try {
     console.log('Server is connecting with database...');
     await database.connect();
+    database.handleConnectionLostError();
   } catch (error) {
     console.log(error);
-    return;
   }
 
   server.listen(appConfig.port, () => {
